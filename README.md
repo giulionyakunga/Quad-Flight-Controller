@@ -1,7 +1,12 @@
 # Quad-Flight-Controller
-Designing and Building a Flight controller for a Quadcopter using a Microcontroller
+Quadcopter Flight controller using a Microcontroller.
 
-## Circuit Components
+The aim of this project is to design and build a flight controllere circuit for a Quadcopter. The flight controller circuir will be integrated with some peripheral electronic components to safely control the drone. The flight controller will receive control signals from a RF Transimitter throught a RF Receiver, and decode the signals. The Circuit will also read and process the *IMU* sensor data for drone balancing. Finally the circuit will control speed of motors using Electronic Speed controllers (ESC).
+
+NOTE
+> FC stands for Flight Controller"
+
+## FC Circuit Components
 1. Atmega328P Microcontroller
 2. 16Mhz Crystal Oscillator
 3. 2 22p Ceramic Capacitor
