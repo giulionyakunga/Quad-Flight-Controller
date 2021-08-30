@@ -20,6 +20,7 @@ NOTE
 11. Microcontroller chip Holder
 12. Gyroscope (MPU6050) 1 10000
 
-gdsvgjsd *vgcsvbdyhjds* bjdsbdsa **bdnsabdksa** bcsbskaudn ```yhfdbfdbkf``` 
+## Flight Controller Circuit
+![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Circuit.jpg)
+*The Circuit was programmed using Arduino IDE. ```Arduino Code``` for circuit are in the folder named Flight Controller in this Repository.*
 
-![](https://imgur.com/3FhqVyF)
