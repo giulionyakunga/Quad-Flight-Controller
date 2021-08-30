@@ -25,3 +25,4 @@ NOTE
 *The Circuit was programmed using Arduino IDE. ```Arduino Code``` for circuit are in the folder named Flight Controller in this Repository.*
 
 ## The Drone
+![The Drone](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Drone.jpg)
