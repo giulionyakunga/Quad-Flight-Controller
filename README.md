@@ -5,10 +5,19 @@ Quadcopter Flight controller using an ATmega328P Microcontroller.
 The aim of this project is to design and build a flight controllere circuit for a Quadcopter using an ATmega328P Microcontroller. An ATmega328P Microcontroller is a general purpose microcontroller with 14 digital pins and 6 analogy pins.
 The flight controller circuir will be integrated with some peripheral electronic components to safely control the drone. The flight controller will receive control signals from a RF Transimitter throught a RF Receiver, and decode the signals. The Circuit will also read and process the *IMU* sensor data for drone balancing. Finally the circuit will control speed of motors using Electronic Speed controllers (ESC).
 
+This project was divided into four main tasks: namely
+  1. Flight Controller Circuit designing and building
+  2. Mounting drone components on a DJI F450 frame
+  3. Coding and programming the Flight controller circuit using Arduino IDE and
+  4. Testing the drone
+
 NOTE
 > FC stands for Flight Controller"
 
-## FC Circuit Components
+## Flight Controller Circuit designing and building
+I designed the FC Circuit using Proteus, then after I printed the circuit and soldered the electronic components on the PCB.
+
+### FC Circuit contains the following Components
 1. Atmega328P Microcontroller
 2. 16Mhz Crystal Oscillator
 3. 2 22p Ceramic Capacitor
