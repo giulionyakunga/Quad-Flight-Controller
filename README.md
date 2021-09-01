@@ -16,6 +16,10 @@ NOTE
 
 ## Flight Controller Circuit designing and building
 I designed the FC Circuit using Proteus, then after I printed the circuit and soldered the electronic components on the PCB.
+### FC Circuit Schemati Diagram
+![Flight Controller Schematic Circuit Diagram](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Schematic%20Circuit%20Diagram.png)
+### FC Circuit PCB Design
+![Flight Controller PCB Design](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20PCB%20Design.jpg)
 
 ### FC Circuit contains the following Components
 1. Atmega328P Microcontroller
