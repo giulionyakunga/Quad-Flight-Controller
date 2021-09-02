@@ -37,7 +37,8 @@ I designed the FC Circuit using Proteus, then after I printed the circuit and so
 
 ## Flight Controller Circuit
 ![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Circuit.jpg)
-*The Circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this Repository.*
+*The Circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this Repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
+
 
 ## The Drone
 ![The Drone](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Drone.jpg)
