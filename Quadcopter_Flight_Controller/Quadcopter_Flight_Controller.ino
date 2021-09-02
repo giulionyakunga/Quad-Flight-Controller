@@ -1,10 +1,9 @@
 /*
 
-  Drone Controller Sketch
+  Quadcopter Flight Controller Sketch
   This code was written by Julio Nyakunga on 7th of July 2020 
-
-  http://www.mdudegiulio.org/en/Tutorial/esc_arming
-    
+  http://www.mdudegiulio.org/en/Tutorial/Quadcopter_Flight_Controller
+  
 */
 
 #include <EnableInterrupt.h>
