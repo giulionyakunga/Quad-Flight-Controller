@@ -33,7 +33,7 @@ I designed the FC Circuit using Proteus, then after I printed the circuit and so
 9. 2x4 Female Pinheader
 10. 1x4 Female Pinheader
 11. Microcontroller chip Holder
-12. Gyroscope (MPU6050) 1 10000
+12. Gyroscope (MPU6050)
 
 ## Flight Controller Circuit
 ![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Circuit.jpg)
