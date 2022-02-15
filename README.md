@@ -36,7 +36,11 @@ I designed the FC circuit using proteus, then after I printed the circuit and so
 12. MPU-9265 (gyroscope, accelerometer and magnetometer)
 
 ## Flight controller circuit
-![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Circuit.jpg)
+![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Drone Circuit 4 (edited).jpeg)
+*The circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
+
+## Flight controller circuit mounted on a DJI F450
+![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Drone Circuit 4 (edited).jpeg)
 *The circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
 
 
