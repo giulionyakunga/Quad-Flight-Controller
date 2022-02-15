@@ -10,6 +10,7 @@ This project was divided into four main tasks: namely
   2. Coding and programming the Flight controller circuit using Arduino IDE
   3. Mounting the flight controller and other drone components on a DJI F450 frame and
   4. Testing the flight controller 
+
 NOTE
 > FC stands for Flight Controller"
 
