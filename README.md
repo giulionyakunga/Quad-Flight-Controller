@@ -40,7 +40,7 @@ I designed the FC circuit using proteus, then after I printed the circuit and so
 *The circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
 
 ## Flight controller circuit mounted on a DJI F450
-![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/the%20flight%20controller.jpg
+![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/the%20flight%20controller.jpg)
 
 
 ## The Drone
