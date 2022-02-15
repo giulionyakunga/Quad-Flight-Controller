@@ -41,4 +41,4 @@ I designed the FC circuit using proteus, then after I printed the circuit and so
 
 
 ## The Drone
-![The Drone](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Drone.jpg)
+![The Drone](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/the drone_3.jpg)
