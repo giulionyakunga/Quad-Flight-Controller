@@ -12,32 +12,32 @@ This project was divided into four main tasks: namely
   4. Testing the flight controller 
 
 NOTE
-> FC stands for Flight Controller"
+> FC stands for Flight Controller
 
-## Flight Controller Circuit designing and building
-I designed the FC Circuit using Proteus, then after I printed the circuit and soldered the electronic components on the PCB.
-### FC Circuit Schemati Diagram
+## Flight controller circuit designing and building
+I designed the FC circuit using proteus, then after I printed the circuit and soldered the electronic components on the PCB.
+### FC circuit schematic diagram
 ![Flight Controller Schematic Circuit Diagram](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Schematic%20Circuit%20Diagram.png)
-### FC Circuit PCB Design
+### FC circuit PCB design
 ![Flight Controller PCB Design](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20PCB%20Design.jpg)
 
-### FC Circuit contains the following Components
-1. Atmega328P Microcontroller
-2. 16Mhz Crystal Oscillator
-3. 2 22p Ceramic Capacitor
-4. 1 Push Button Switch
-5. 1 10K Resistor
+### FC circuit contains the following components
+1. Atmega328P microcontroller
+2. 16Mhz crystal oscillator
+3. 2 22p ceramic capacitor
+4. 1 Push button switch
+5. 1 10K resistor
 6. 3 200/220 Resistor
-7. 3 LED Doide
-8. 1x8 Female Pinheader
-9. 2x4 Female Pinheader
-10. 1x4 Female Pinheader
-11. Microcontroller chip Holder
-12. MPU-9265 (Gyroscope, Accelerometer and Magnetometer)
+7. 3 LED doide
+8. 1x8 female pinheader
+9. 2x4 female pinheader
+10. 1x4 female pinheader
+11. Microcontroller chip holder
+12. MPU-9265 (gyroscope, accelerometer and magnetometer)
 
-## Flight Controller Circuit
+## Flight controller circuit
 ![Flight Controller Circuit](https://raw.githubusercontent.com/giulionyakunga/Quad-Flight-Controller/main/Flight%20Controller%20Circuit.jpg)
-*The Circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this Repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
+*The circuit was programmed using Arduino IDE. ```Arduino Code``` for the circuit are in the folder named Quadcopter_Flight_Controller in this repository.* ![View Code](https://github.com/giulionyakunga/Quad-Flight-Controller/blob/main/Quadcopter_Flight_Controller/Quadcopter_Flight_Controller.ino)
 
 
 ## The Drone
