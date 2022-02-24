@@ -1,0 +1,5 @@
+changes:
+1) Addition of I2C IO port for Magnetometer
+2) extension of LED output pins
+3) adding a series connection of four 20K resistors for battery voltage measurement
+3) extension of analoges output pins

@@ -61,7 +61,7 @@ int motor_4 = 9;
 uint16_t throttle = 0;
 uint16_t throttle0 = 1000;
 int throttle1 = 1000; 
-int throttle2 = 1000;
+int throttle2 = 1000; 
 int throttle3 = 1000;
 int throttle4 = 1000;
 
@@ -95,7 +95,8 @@ float pitch, pitch_tmp, roll, roll_tmp, yaw, yaw_tmp;
 float elapsedTime, total_elapsedTime, time, timePrev;
 int loop_counter = 0;
 float rad_to_deg = 180/3.141592654;
-int avg_count = 0;
+
+/////////////////PID CONTROLLER OUTPUTS/////////////////
 float pid_roll, pid_pitch, pid_yaw, error_roll, rate_error_roll, error_pitch, error_pitch_avg, error_yaw, previous_error_roll, previous_error_pitch, previous_error_yaw;
 float pid_p_roll=0;
 float pid_i_roll=0;
@@ -112,17 +113,13 @@ float pid_d_yaw=0;
 float pid_max = 400;
 
 /////////////////PID CONSTANTS/////////////////
-//double kp_roll = 3.44;    //Proportionality Constant for Roll
-//double ki_roll = 0.048;   //Integral Constant for Roll
-//double kd_roll = 1.92;    //Derivative Constant for Roll
-
-double kp_roll = 15.0;    // 15.0
+double kp_roll = 3.0;    // 3.0 1.5
 double ki_roll = 0.05;    // 0.05  
-double kd_roll = 0.0;     // 10.0
+double kd_roll = 5.0;     // 10.0
 
-double kp_pitch = 15.0;   // 15.0
-double ki_pitch = 0.05;   // 0.5
-double kd_pitch = 0.0;
+double kp_pitch = 3.0;   // 15.0
+double ki_pitch = 0.05;   // 0.05
+double kd_pitch = 5.0;
 
 double kp_yaw = 0.0;
 double ki_yaw = 0.0;
@@ -132,7 +129,11 @@ float desired_roll_angle = 0.0;        //This is the angle in which we whant the
 float desired_pitch_angle = 0.0;        //This is the angle in which we whant the drone to stay steady
 float desired_yaw_angle = 0.0;        //This is the angle in which we whant the drone to stay steady
 boolean isDroneLevel = false;   //This boolean variable is used to check if the drone is level at startup
+int battery_voltage;
+boolean battery_low = false;
 
+unsigned long loop_timer;
+int motor = 1;
 void setup() {
 //  Serial.begin(SERIAL_PORT_SPEED);
 //  mySoftwareSerial.begin(9600);
@@ -173,14 +174,19 @@ void setup() {
    * of PWM to them before connecting the battery. Otherwise
    * the ESCs won't start up or enter in the configure mode.
    * The min value is 1000us and max is 2000us, REMEMBER!*/
-  esc1.writeMicroseconds(1000); 
-  esc2.writeMicroseconds(1000);
-  esc3.writeMicroseconds(1000); 
-  esc4.writeMicroseconds(1000);
-  delay(1000); /*Give some delay, 7s, to have time to connect
-                *the propellers and let everything start up*/ 
+}
 
-//  mySoftwareSerial.println("Started");
+float check_battery_voltage(){
+  battery_voltage = analogRead(0);
+  float voltage = battery_voltage * (5.00 / 1023.00) * 4; //convert the value to a true voltage.
+  if (voltage < 14.0) //set the voltage considered low battery here
+  {
+    isArmed = false;
+    battery_low = true;
+  }else{
+    battery_low = false;
+  }
+  return voltage;
 }
 
 void rc_read_values() {
@@ -284,7 +290,7 @@ void get_mpu_6050_data(){
    the raw value by 131 because that's the value that the datasheet gives us*/
 
    /*---X---*/
-   Gyro_angle[0] = Gyr_rawX/131.0; 
+   Gyro_angle[0] = Gyr_rawX/131.0;
    /*---Y---*/
    Gyro_angle[1] = Gyr_rawY/131.0;
 
@@ -294,9 +300,9 @@ void get_mpu_6050_data(){
    *part that afects the angles and ofcourse multiply by 0.98 */
 
    /*---X axis angle---*/
-   Total_angle[0] = 0.98 *(Total_angle[0] + Gyro_angle[0]*elapsedTime) + 0.02*Acceleration_angle[0];
+   Total_angle[0] = 0.998 *(Total_angle[0] + Gyro_angle[0]*elapsedTime) + 0.002*Acceleration_angle[0];    // 0.02  0.98
    /*---Y axis angle---*/
-   Total_angle[1] = 0.98 *(Total_angle[1] + Gyro_angle[1]*elapsedTime) + 0.02*Acceleration_angle[1];
+   Total_angle[1] = 0.998 *(Total_angle[1] + Gyro_angle[1]*elapsedTime) + 0.002*Acceleration_angle[1];
    
    /*Now we have our angles in degree and values from -10º0 to 100º aprox*/ 
 }
@@ -328,10 +334,11 @@ void pid_controller(){
     error multiplied by  the integral constant. This will integrate (increase)
     the value each loop till we reach the 0 point
   */
-  if((-3 < error_roll) && (error_roll < 3))
+  if((-5 < error_roll) && (error_roll < 5))
   {
     pid_i_roll = pid_i_roll+(ki_roll*error_roll);
   }
+  
   if(pid_i_roll > 20.0){
     pid_i_roll = 20.0;
   }
@@ -353,7 +360,10 @@ void pid_controller(){
   pid_d_roll = kd_roll*((error_roll - previous_error_roll)/elapsedTime);
   previous_error_roll = error_roll;
 
-
+//  if((-3 < error_roll) && (error_roll < 3)){
+//    pid_p_roll = 0.0;
+//    pid_d_roll = 0.0;
+//  }
   
   /*The final PID values is the sum of each of this 3 parts*/
   pid_roll = pid_p_roll + pid_i_roll + pid_d_roll;
@@ -377,7 +387,7 @@ void pid_controller(){
     error multiplied by  the integral constant. This will integrate (increase)
     the value each loop till we reach the 0 point
   */
-  if((-3 < error_pitch) && (error_pitch < 3))
+  if((-5 < error_pitch) && (error_pitch < 5))
   {
     pid_i_pitch = pid_i_pitch+(ki_pitch*error_pitch);
   }
@@ -395,8 +405,16 @@ void pid_controller(){
     Finnaly we multiply the result by the derivate constant
   */
 
+//  pid_d_pitch = kd_pitch*((error_pitch - previous_error_pitch)/elapsedTime);
+//  previous_error_pitch = error_pitch;
+
+  //Using a complementary filter to remove noise
+  error_pitch = 0.999*previous_error_pitch + 0.001*error_pitch;
+  
+  // Calculating the d term for pitch
   pid_d_pitch = kd_pitch*((error_pitch - previous_error_pitch)/elapsedTime);
   previous_error_pitch = error_pitch;
+
 
   /*The final PID values is the sum of each of this 3 parts*/
   pid_pitch = pid_p_pitch + pid_i_pitch + pid_d_pitch;
@@ -420,12 +438,12 @@ void loop() {
   
   calculate_elapsed_time();
   get_mpu_6050_data(); 
-  pitch = Total_angle[0];
-  roll = Total_angle[1] - 1.0;
+  pitch = Total_angle[0] + 11.0;
+  roll = Total_angle[1];
 
   pid_controller();
-  
-  if((-3 <= roll) && (roll <= 3) && (-3 <= pitch) && (pitch <= 3) && !isDroneLevel){
+//   
+  if((-5 <= roll) && (roll <= 5) && (-5 <= pitch) && (pitch <= 5) && !isDroneLevel){
     isDroneLevel = true; 
   }else{
     isDroneLevel = false; 
@@ -453,40 +471,15 @@ void loop() {
   
   if((rc_values[RC_CH3] >= 800) && (rc_values[RC_CH3] <= 1000) && (rc_values[RC_CH4] >= 800) && (rc_values[RC_CH4] <= 1000) && !isArmed && isDroneLevel){
     isArmed = true;
-    
     clear_pid_corrections();  // this is done to clear saved previous PID corrections particularly the Integral (I) Term
-
 //    Serial.println("ARMED");
     PORTD |= B10000000;
     PORTB |= B00000001;
   }
   if((rc_values[RC_CH3] <= 1000) && (rc_values[RC_CH4] >= 1800) && isArmed){
     isArmed = false;
-    
     clear_pid_corrections();  // this is done to clear saved previous PID corrections particularly the Integral (I) Term
-
 //    Serial.println("DISARMED");
-    while(throttle1 > 1000){
-      throttle1 -= 20;
-      throttle2 -= 20;
-      throttle3 -= 20;
-      throttle4 -= 20;
-      esc1.writeMicroseconds(throttle1);
-      esc2.writeMicroseconds(throttle2);
-      esc3.writeMicroseconds(throttle3);
-      esc4.writeMicroseconds(throttle4);
-      delay(100);
-    }
-    if(throttle1 <= 1000){
-      throttle1 = 1000;
-      throttle2 = 1000;
-      throttle3 = 1000;
-      throttle4 = 1000;
-    }
-    esc1.writeMicroseconds(throttle1);
-    esc2.writeMicroseconds(throttle2);
-    esc3.writeMicroseconds(throttle3);
-    esc4.writeMicroseconds(throttle4);
   }
   
   if(isArmed){
@@ -508,10 +501,11 @@ void loop() {
     }
     
     throttle = rc_values[RC_CH3];
-    throttle1 = rc_values[RC_CH3];
-    throttle2 = rc_values[RC_CH3];
-    throttle3 = rc_values[RC_CH3];
-    throttle4 = rc_values[RC_CH3];
+    if (throttle > 1800) throttle = 1800;                          //This prevent motor to get into full throttle
+    throttle1 = throttle;
+    throttle2 = throttle;
+    throttle3 = throttle;
+    throttle4 = throttle;
     
     changeInRoll = ROLL - rc_values[RC_CH1];
     changeInPitch = PITCH - rc_values[RC_CH2];
@@ -520,75 +514,137 @@ void loop() {
       changeInYaw = YAW - rc_values[RC_CH4];
     }else{
       changeInYaw = 0;
+    } 
+    
+    if(changeInPitch > 250){
+      desired_pitch_angle = 10.0;
+    }else if(changeInPitch < -250){      
+      desired_pitch_angle = -10.0;
+    }else{
+      desired_pitch_angle = 0.0;
+    }
+
+    if(changeInRoll > 250){
+      desired_roll_angle = -10.0;
+    }else if(changeInRoll < -250){
+      desired_roll_angle = 10.0;
+    }else{
+      desired_roll_angle = 0.0;
+    }
+
+//    if(changeInYaw > 100){
+//      throttle1 = throttle1 + changeInYaw - 100;
+//      throttle3 = throttle3 + changeInYaw - 100;
+//      throttle2 = throttle2 - changeInYaw - 100;
+//      throttle4 = throttle4 - changeInYaw - 100;
+//    }else if(changeInYaw < -100){
+//      throttle1 = throttle1 + changeInYaw + 100;
+//      throttle3 = throttle3 + changeInYaw + 100;
+//      throttle2 = throttle2 - changeInYaw + 100;
+//      throttle4 = throttle4 - changeInYaw + 100;
+//    }
+
+    if((throttle > 1400) && (throttle < 1700)){
+      throttle1= 1400;
+      throttle2= 1400;
+      throttle3= 1400;
+      throttle4= 1400;
+    }else if(throttle > 1700){
+      throttle1= 1400 + throttle - 1700;
+      throttle2= 1400 + throttle - 1700;
+      throttle3= 1400 + throttle - 1700;
+      throttle4= 1400 + throttle - 1700;
+    }else{
+      throttle1= throttle;
+      throttle2= throttle;
+      throttle3= throttle;
+      throttle4= throttle;
     }
     
-    if(changeInPitch > 100){
-      throttle3 = throttle3 + changeInPitch - 100;
-      throttle4 = throttle4 + changeInPitch - 100;
-    }else if(changeInPitch < -100){
-      throttle1 = throttle1 - changeInPitch + 100;
-      throttle2 = throttle2 - changeInPitch + 100;
-    }
-
-    if(changeInRoll > 100){
-      throttle2 = throttle2 + changeInRoll - 100;
-      throttle3 = throttle3 + changeInRoll - 100;
-    }else if(changeInRoll < -100){
-      throttle1 = throttle1 - changeInRoll + 100;
-      throttle4 = throttle4 - changeInRoll + 100;
-    }
-
-    if(changeInYaw > 100){
-      throttle1 = throttle1 + changeInYaw - 100;
-      throttle3 = throttle3 + changeInYaw - 100;
-      throttle2 = throttle2 - changeInYaw - 100;
-      throttle4 = throttle4 - changeInYaw - 100;
-    }else if(changeInYaw < -100){
-      throttle1 = throttle1 + changeInYaw + 100;
-      throttle3 = throttle3 + changeInYaw + 100;
-      throttle2 = throttle2 - changeInYaw + 100;
-      throttle4 = throttle4 - changeInYaw + 100;
-    }
-
-    //Adding PID corrections
-    throttle1 = throttle1 - (int)pid_roll;
-    throttle4 = throttle4 - (int)pid_roll;
-    throttle2 = throttle2 + (int)pid_roll;
-    throttle3 = throttle3 + (int)pid_roll;
     
-    throttle1 = throttle1 - (int)pid_pitch;
-    throttle2 = throttle2 - (int)pid_pitch;
-    throttle3 = throttle3 + (int)pid_pitch;
-    throttle4 = throttle4 + (int)pid_pitch;
+      //Adding PID corrections
+//      throttle1 = throttle1 - (int)pid_roll;
+//      throttle4 = throttle4 - (int)pid_roll;
+//      throttle2 = throttle2 + (int)pid_roll;
+//      throttle3 = throttle3 + (int)pid_roll;
+//      
+//      throttle1 = throttle1 - (int)pid_pitch;
+//      throttle2 = throttle2 - (int)pid_pitch;
+//      throttle3 = throttle3 + (int)pid_pitch;
+//      throttle4 = throttle4 + (int)pid_pitch;
 
+      if(throttle > 1200){
+        if(pid_roll > 0){
+          throttle2 = throttle2 + (int)pid_roll;
+          throttle3 = throttle3 + (int)pid_roll;
+        }else{
+          throttle1 = throttle1 - (int)pid_roll;
+          throttle4 = throttle4 - (int)pid_roll;
+        }
+  
+        if(pid_pitch > 0){
+          throttle3 = throttle3 + (int)pid_pitch;
+          throttle4 = throttle4 + (int)pid_pitch;
+        }else{
+          throttle1 = throttle1 - (int)pid_pitch;
+          throttle2 = throttle2 - (int)pid_pitch;
+        }
+      }
+      
     /*Once again we map the PWM values to be sure that we won't pass the min
-    and max values. Yes, we've already maped the PID values. But for example, for 
-    throttle value of 1300, if we sum the max PID value we would have 2300us and
-    that will mess up the ESC.
+    and max values and that we don't mess up the ESC.
   */
     if(throttle1 > 2000) throttle1=2000;
     if(throttle2 > 2000) throttle2=2000;
     if(throttle3 > 2000) throttle3=2000;
     if(throttle4 > 2000) throttle4=2000;
 
+    if(throttle1 < 1000) throttle1= 1000;
+    if(throttle2 < 1000) throttle2= 1000;
+    if(throttle3 < 1000) throttle3= 1000;
+    if(throttle4 < 1000) throttle4= 1000;
+
     /*
       * Once again we limit the PWM values to be sure that no motor should stop running
     */
+
+    //All the information for controlling the motor's is available.
+    //The refresh rate is 250Hz. That means the esc's need there pulse every 4ms.
+    if((micros() - loop_timer) > 4000){                         //We wait until 4000us are passed.
+      loop_timer = micros();                                    //Set the timer for the next loop.
+      if(motor == 1){
+        motor = 2;
+        esc1.writeMicroseconds(throttle1);
+      }else if(motor == 2){
+        motor = 3;
+        esc2.writeMicroseconds(throttle2);
+      }else if(motor == 3){
+        motor = 4;
+        esc3.writeMicroseconds(throttle3);
+      }else if(motor == 4){
+        motor = 1;
+        esc4.writeMicroseconds(throttle4);
+      }
+    }
     
-    if(throttle1 < 1150) throttle1= 1150;
-    if(throttle2 < 1150) throttle2= 1150;
-    if(throttle3 < 1150) throttle3= 1150;
-    if(throttle4 < 1150) throttle4= 1150;
-    
-    esc1.writeMicroseconds(throttle1);
-    esc2.writeMicroseconds(throttle2);
-    esc3.writeMicroseconds(throttle3);
-    esc4.writeMicroseconds(throttle4);
   }else{
-    esc1.writeMicroseconds(1000);
-    esc2.writeMicroseconds(1000);
-    esc3.writeMicroseconds(1000);
-    esc4.writeMicroseconds(1000);
+    //The refresh rate is 250Hz. That means the esc's need there pulse every 4ms.
+    if((micros() - loop_timer) > 4000){                         //We wait until 4000us are passed.
+      loop_timer = micros();                                    //Set the timer for the next loop.
+      if(motor == 1){
+        motor = 2;
+        esc1.writeMicroseconds(1000);
+      }else if(motor == 2){
+        motor = 3;
+        esc2.writeMicroseconds(1000);
+      }else if(motor == 3){
+        motor = 4;
+        esc3.writeMicroseconds(1000);
+      }else if(motor == 4){
+        motor = 1;
+        esc4.writeMicroseconds(1000);
+      }
+    }
     
     lEDOnTime = millis() - lEDOnTime2;
     if(isLEDOn && (lEDOnTime >= 500)){
@@ -606,5 +662,10 @@ void loop() {
       lEDOnTime2 = millis();
       lEDOnTime = 0;
     }
-  } 
+  }
+//  while(battery_low){
+//    check_battery_voltage();
+//    PORTD |= B10000000;   // Setting digital pin 7 HIGH
+//    PORTB |= B00000001;   // Setting digital pin 8 HIGH
+//  }
 }//end of loop void
